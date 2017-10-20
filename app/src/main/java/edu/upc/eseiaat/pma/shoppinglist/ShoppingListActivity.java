@@ -1,9 +1,12 @@
 package edu.upc.eseiaat.pma.shoppinglist;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,7 +67,34 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         list.setAdapter(adapter);
 
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> list, View item, int pos, long id) {
+                maybeRemoveItem(pos); // cuál
 
+
+                return true;
+            }
+        });
+    }
+
+    private void maybeRemoveItem(final int pos) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this); // creem un builder
+        builder.setTitle(R.string.confirm); // títol del builder
+
+        String fmt = getResources().getString(R.string.confirm_message);
+        builder.setMessage(String.format(fmt, itemList.get(pos)));  // missatge traduible
+
+        builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                itemList.remove(pos); // lo borra
+
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null); // el cancel és de Android i es tradueix automàticament
+        builder.create().show();
+        adapter.notifyDataSetChanged(); //avisamos al adapter
 
     }
 
@@ -76,7 +106,6 @@ public class ShoppingListActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
             edit_item.setText(""); // així cada vegada que afageixo un element a la llista es borra
         }
-
     }
 
 
