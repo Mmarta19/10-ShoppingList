@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class ShoppingListActivity extends AppCompatActivity {
 
-    private ArrayList<String> itemList;
+    private ArrayList<ShoppingItem> itemList;
     private ShoppingListAdapter adapter;
 
 
@@ -40,10 +40,10 @@ public class ShoppingListActivity extends AppCompatActivity {
         edit_item = (EditText) findViewById(R.id.edit_item);
 
         itemList = new ArrayList<>();   // creamos la Lista
-        itemList.add("Patatas");        // Le ponemos los elementos de la lista
-        itemList.add("Papel WC");
-        itemList.add("Huevos");
-        itemList.add("Copas Danone");
+        itemList.add(new ShoppingItem("Patatas"));        // Le ponemos los elementos de la lista
+        itemList.add(new ShoppingItem ("Papel WC"));
+        itemList.add(new ShoppingItem("Huevos"));
+        itemList.add(new ShoppingItem("Copas Danone"));
 
         adapter = new ShoppingListAdapter(     // Creamos el Adapter
                 this,
@@ -103,7 +103,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         String item_text = edit_item.getText().toString();
        //  if (!item_text.equals(""))
         if (!item_text.isEmpty()){          // si no esta vacia el editText lo añado a la Lista
-            itemList.add(item_text);
+            itemList.add(new ShoppingItem(item_text)); // creo un object nuevo
             adapter.notifyDataSetChanged();
             edit_item.setText(""); // així cada vegada que afageixo un element a la llista es borra
         }
