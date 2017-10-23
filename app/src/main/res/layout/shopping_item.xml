@@ -11,5 +11,7 @@
         android:layout_height="match_parent"
         android:paddingLeft="10dp"
         android:text="CheckBox"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:clickable="false"
+        android:focusable="false"/>
 </LinearLayout>

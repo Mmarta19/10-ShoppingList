@@ -37,9 +37,12 @@ public class ShoppingListAdapter extends ArrayAdapter <ShoppingItem> {
             result = inflater.inflate(R.layout.shopping_item, null);
         }
 
-        CheckBox shopping_item = (CheckBox) result.findViewById(R.id.shopping_item); // se saca el elemento del checkbox
+        CheckBox checkbox = (CheckBox) result.findViewById(R.id.shopping_item); // se saca el elemento del checkbox
         ShoppingItem item = getItem(position);  // devuelve el valor (string) de la lista en esa posicion
-        shopping_item.setText(item.getText());
+        checkbox.setText(item.getText());
+        checkbox.setChecked(item.isChecked()); // le pregunto al item si esta marcadd y ése boolean le paso al setChecked
+
+
         return result;
     }
 

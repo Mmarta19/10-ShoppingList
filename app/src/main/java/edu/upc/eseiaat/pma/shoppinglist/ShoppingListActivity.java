@@ -4,10 +4,10 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -40,7 +40,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         edit_item = (EditText) findViewById(R.id.edit_item);
 
         itemList = new ArrayList<>();   // creamos la Lista
-        itemList.add(new ShoppingItem("Patatas"));        // Le ponemos los elementos de la lista
+        itemList.add(new ShoppingItem ("Patatas"));        // Le ponemos los elementos de la lista
         itemList.add(new ShoppingItem ("Papel WC"));
         itemList.add(new ShoppingItem("Huevos"));
         itemList.add(new ShoppingItem("Copas Danone"));
@@ -67,6 +67,21 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         list.setAdapter(adapter);
 
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                Log.i("marta","onItemClick");
+               itemList.get(pos).toggleleChecked(); // method creado, para poner a desmarcado el que esta marcado.
+                adapter.notifyDataSetChanged();
+
+
+                /* ShoppingItem item = itemList.get(pos);  // item de la lista
+                boolean check = item.isChecked(); // mirar como esta
+                itemList.get(pos).setChecked(!check);*/
+
+            }
+        });
+
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> list, View item, int pos, long id) {
@@ -83,7 +98,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         builder.setTitle(R.string.confirm); // títol del builder
 
         String fmt = getResources().getString(R.string.confirm_message);
-        builder.setMessage(String.format(fmt, itemList.get(pos)));  // missatge traduible
+        builder.setMessage(String.format(fmt, itemList.get(pos).getText()));  // missatge traduible
 
         builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
             @Override
@@ -106,6 +121,7 @@ public class ShoppingListActivity extends AppCompatActivity {
             itemList.add(new ShoppingItem(item_text)); // creo un object nuevo
             adapter.notifyDataSetChanged();
             edit_item.setText(""); // així cada vegada que afageixo un element a la llista es borra
+            list.smoothScrollToPosition(itemList.size()-1); // muevete hasta el ultimo elemento
         }
     }
 
