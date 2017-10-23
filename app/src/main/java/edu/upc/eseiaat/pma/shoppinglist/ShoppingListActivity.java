@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class ShoppingListActivity extends AppCompatActivity {
 
     private ArrayList<String> itemList;
-    private ArrayAdapter<String> adapter;
+    private ShoppingListAdapter adapter;
 
 
     private ListView list; //son campos
@@ -45,7 +45,7 @@ public class ShoppingListActivity extends AppCompatActivity {
         itemList.add("Huevos");
         itemList.add("Copas Danone");
 
-        adapter = new ArrayAdapter<String>(     // Creamos el Adapter
+        adapter = new ShoppingListAdapter(     // Creamos el Adapter
                 this,
                 android.R.layout.simple_list_item_1,
                 itemList
@@ -89,12 +89,13 @@ public class ShoppingListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 itemList.remove(pos); // lo borra
+                adapter.notifyDataSetChanged();
 
             }
         });
         builder.setNegativeButton(android.R.string.cancel, null); // el cancel és de Android i es tradueix automàticament
         builder.create().show();
-        adapter.notifyDataSetChanged(); //avisamos al adapter
+
 
     }
 
@@ -107,6 +108,7 @@ public class ShoppingListActivity extends AppCompatActivity {
             edit_item.setText(""); // així cada vegada que afageixo un element a la llista es borra
         }
     }
+
 
 
 }
