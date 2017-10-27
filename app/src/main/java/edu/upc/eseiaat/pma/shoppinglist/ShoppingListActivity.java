@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class ShoppingListActivity extends AppCompatActivity {
 
     private static final String  FILENAME = "shopping_list.xt"; // solo hay una copia de este dato para todos los objectos
+    private static final int MAX_BYTES = 80000;
 
     private ArrayList<ShoppingItem> itemList;
     private ShoppingListAdapter adapter;
@@ -53,6 +55,30 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     }
 
+    private void readItemList(){
+        itemList = new ArrayList<>();
+        try {
+            FileInputStream fis = openFileInput(FILENAME);
+            byte[] buffer = new byte[MAX_BYTES]; 
+            int nread = fis.read(buffer);
+            String content = new String(buffer, 0, nread);
+            String[] lines = content.split("\n");
+            for (String line : lines) {
+                String[] parts = line.split(";");
+                itemList.add(new ShoppingItem(parts[0], parts[1].equals("true")));
+            }
+            fis.close();
+            
+        } catch (FileNotFoundException e) {
+            Log.i("Marta", "readItemList:  filenotfoundException");
+
+        } catch (IOException e) {
+            Log.e("Marta", "readItemList IOEXception");
+            Toast.makeText(this, R.string.cannotread, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -78,6 +104,8 @@ public class ShoppingListActivity extends AppCompatActivity {
         itemList.add(new ShoppingItem ("Papel WC"));
         itemList.add(new ShoppingItem("Huevos"));
         itemList.add(new ShoppingItem("Copas Danone"));
+
+        //readItemList();
 
         adapter = new ShoppingListAdapter(     // Creamos el Adapter
                 this,
