@@ -64,13 +64,15 @@ public class ShoppingListActivity extends AppCompatActivity {
             FileInputStream fis = openFileInput(FILENAME);
             byte[] buffer = new byte[MAX_BYTES]; 
             int nread = fis.read(buffer);
-            String content = new String(buffer, 0, nread);
-            String[] lines = content.split("\n");
-            for (String line : lines) {
-                String[] parts = line.split(";");
-                itemList.add(new ShoppingItem(parts[0], parts[1].equals("true")));
+            if (nread>0) {
+                String content = new String(buffer, 0, nread);
+                String[] lines = content.split("\n");
+                for (String line : lines) {
+                    String[] parts = line.split(";");
+                    itemList.add(new ShoppingItem(parts[0], parts[1].equals("true")));
+                }
+                fis.close();
             }
-            fis.close();
             
         } catch (FileNotFoundException e) {
             Log.i("Marta", "readItemList:  filenotfoundException");
@@ -102,13 +104,13 @@ public class ShoppingListActivity extends AppCompatActivity {
         btn_add = (Button)findViewById(R.id.btn_add);
         edit_item = (EditText) findViewById(R.id.edit_item);
 
-        itemList = new ArrayList<>();   // creamos la Lista
+        /*itemList = new ArrayList<>();   // creamos la Lista
         itemList.add(new ShoppingItem ("Patatas"));        // Le ponemos los elementos de la lista
         itemList.add(new ShoppingItem ("Papel WC"));
         itemList.add(new ShoppingItem("Huevos"));
-        itemList.add(new ShoppingItem("Copas Danone"));
+        itemList.add(new ShoppingItem("Copas Danone"));*/
 
-        //readItemList();
+        readItemList();
 
         adapter = new ShoppingListAdapter(     // Creamos el Adapter
                 this,
@@ -203,10 +205,29 @@ public class ShoppingListActivity extends AppCompatActivity {
             case  R.id.clear_cheched:
                 clearChecked();
                 return true;
+            case R.id.clear_all:
+                clearAll();
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void clearAll() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.confirm);
+        builder.setMessage(R.string.confirm_clear_all);
+        builder.setPositiveButton(R.string.clear_all, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                itemList.clear();
+                adapter.notifyDataSetChanged();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.create().show();
     }
 
     private void clearChecked() {
