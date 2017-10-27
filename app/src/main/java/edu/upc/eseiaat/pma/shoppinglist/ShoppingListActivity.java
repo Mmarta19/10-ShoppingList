@@ -117,6 +117,8 @@ public class ShoppingListActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1,
                 itemList
         );
+
+
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
